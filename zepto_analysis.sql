@@ -13,21 +13,10 @@ weightInGms integer,
 outOfStock boolean,
 quantity integer
 );
+
+
 ALTER TABLE zepto
 ADD COLUMN sku_id INT AUTO_INCREMENT PRIMARY KEY FIRST;
-
-LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/zepto_v2.csv'
-INTO TABLE zepto
-CHARACTER SET latin1
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS
-(category, name, mrp, discountPercent, availableQuantity,
- discountedSellingPrice, weightInGms, @outOfStock, quantity)
-SET outOfStock = IF(@outOfStock='FALSE',0,1);
-
-SHOW VARIABLES LIKE 'secure_file_priv';
 
 -- count of rows
 select count(*) from zepto;
@@ -71,6 +60,7 @@ having count(sku_id) > 1
 order by count(sku_id) desc;
 
 -- data cleaning
+
 -- products with price = 0
 select * from zepto
 where mrp = 0 or discountedSellingPrice = 0; 
@@ -85,6 +75,7 @@ discountedSellingPrice = discountedSellingPrice/100.0;
 select mrp, discountedSellingPrice from zepto;
 
 -- Business questions
+
 -- Q1. Find the top 10 best-value products based on the discount percentage.
 select distinct(name), mrp, discountPercent from zepto
 order by discountPercent DESC
@@ -129,7 +120,7 @@ select category, sum(weightInGms * availableQuantity) as total_weight from zepto
 group by category
 order by total_weight;
 
-select * from zepto;
+
 
 
 
